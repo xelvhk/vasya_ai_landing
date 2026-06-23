@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vasya AI — local-first voice assistant</title>
+    <meta
+      name="description"
+      content="Vasya AI is a local-first voice assistant for desktop productivity: tasks, calendar, notes, Memory Center, Obsidian, Notion, GitHub and FastAPI."
+    />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header" data-site-header>
+      <a class="brand" href="#top" aria-label="Vasya AI home">vasya ai</a>
+      <nav class="nav-links" aria-label="Основная навигация">
+        <a href="#product">PRODUCT</a>
+        <a href="#system">SYSTEM</a>
+        <a href="#memory">MEMORY</a>
+        <a href="#setup">SETUP</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero dark-frame" aria-labelledby="hero-title">
+        <div class="hero-atmosphere" aria-hidden="true">
+          <span class="orb orb-one"></span>
+          <span class="orb orb-two"></span>
+          <span class="orb orb-three"></span>
+        </div>
+        <div class="hero-content">
+          <p class="micro-label">LOCAL-FIRST / VOICE-FIRST / DESKTOP</p>
+          <h1 id="hero-title">Вася<br />AI<br />assistant</h1>
+          <p class="hero-subtitle">
+            <span>Персональный голосовой ассистент.</span>
+            <span>Живет на вашем компьютере.</span>
+            <span>Задачи, календарь, заметки, память.</span>
+            <span>Интеграции - только как адаптеры.</span>
+          </p>
+        </div>
+        <a class="scroll-cue" href="#product" aria-label="Перейти к описанию продукта">
+          SCROLL<br />TO EXPLORE
+        </a>
+      </section>
+
+      <section id="product" class="editorial-section product-intro">
+        <div class="section-kicker">PRODUCT VALUE</div>
+        <div class="split-intro">
+          <h2>Не витрина LLM. Рабочий desktop assistant.</h2>
+          <div class="intro-copy">
+            <p>
+              Vasya AI превращает голос и текст в конкретные действия:
+              добавить задачу, создать событие, найти контекст в памяти,
+              продиктовать текст, выгрузить заметку в Obsidian или синхронизировать
+              проектные обновления в Notion.
+            </p>
+            <p>
+              Ядро остается локальным: SQLite, локальные файлы, Ollama,
+              faster-whisper и TTS backend. Google Calendar, Notion и GitHub
+              подключаются поверх через изолированные адаптеры.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="showcase dark-frame" aria-labelledby="widget-title">
+        <div class="showcase-copy">
+          <p class="micro-label">DESKTOP SHELL</p>
+          <h2 id="widget-title">Click-to-talk, hotkey и понятные состояния.</h2>
+          <p>
+            Плавающий avatar widget, tray/menu bar control, быстрый текстовый
+            ввод и voice loop делают Васю доступным без терминала.
+          </p>
+        </div>
+        <figure class="screenshot-panel">
+          <img
+            src="assets/vasya-pro-idle-01.webp"
+            alt="Vasya Pro idle avatar skin"
+            width="220"
+            height="220"
+          />
+          <figcaption>Vasya Pro skin: idle state из проекта vasya_ai.</figcaption>
+        </figure>
+      </section>
+
+      <section class="editorial-section capability-section" aria-labelledby="capabilities-title">
+        <div class="section-kicker">CAPABILITIES</div>
+        <h2 id="capabilities-title">Что уже умеет Вася</h2>
+        <div class="capability-grid">
+          <article>
+            <span>01</span>
+            <h3>Voice command loop</h3>
+            <p>Локальный ввод с микрофона, STT, routing, tool dispatch и TTS-ответ.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Planner</h3>
+            <p>Задачи, события календаря, даты на русском языке и подтверждения для рискованных действий.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Dictation</h3>
+            <p>Диктовка в активное поле или безопасный POST в локальный API endpoint.</p>
+          </article>
+          <article>
+            <span>04</span>
+            <h3>Memory Center</h3>
+            <p>Локальные источники, чанки, поиск, recent view, daily digest и quick-open действий.</p>
+          </article>
+          <article>
+            <span>05</span>
+            <h3>Integrations</h3>
+            <p>Google Calendar, Obsidian, Notion и GitHub через adapter layer, без превращения внешних сервисов в ядро.</p>
+          </article>
+          <article>
+            <span>06</span>
+            <h3>API gateway</h3>
+            <p>FastAPI слой для будущих web/mobile thin clients: chat, pipeline, realtime voice и memory routes.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="system" class="architecture dark-frame" aria-labelledby="architecture-title">
+        <p class="micro-label">SYSTEM DESIGN</p>
+        <h2 id="architecture-title">Локальное ядро, модульная маршрутизация, безопасные границы.</h2>
+        <div class="system-flow" aria-label="Архитектурный поток Vasya AI">
+          <div>
+            <span>INPUT</span>
+            <strong>voice / text</strong>
+          </div>
+          <div>
+            <span>ROUTING</span>
+            <strong>orchestrator</strong>
+          </div>
+          <div>
+            <span>AGENTS</span>
+            <strong>task / calendar / note / game</strong>
+          </div>
+          <div>
+            <span>SERVICES</span>
+            <strong>repositories / adapters</strong>
+          </div>
+          <div>
+            <span>OUTPUT</span>
+            <strong>text / voice / API</strong>
+          </div>
+        </div>
+        <p class="architecture-note">
+          Core orchestration не зависит от UI и транспорта. Интеграции входят
+          через сервисы и адаптеры, а API защищен auth, throttling и redaction
+          для чувствительных логов.
+        </p>
+      </section>
+
+      <section id="memory" class="editorial-section memory-section">
+        <div class="section-kicker">SECOND BRAIN</div>
+        <div class="memory-layout">
+          <h2>Память, которую можно проверить.</h2>
+          <div class="memory-copy">
+            <p>
+              Memory Center построен как inspectable local foundation, а не
+              черный ящик. Источники, чанки, синхронизация и daily digest имеют
+              provenance и локальные Markdown-артефакты.
+            </p>
+            <ul>
+              <li>Поиск по локальному контексту и quick-open файлов или URL.</li>
+              <li>Daily digest с историей за today, yesterday, 7d и 30d.</li>
+              <li>Obsidian, Notion и GitHub sync через явные adapter boundaries.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="release-band dark-frame" aria-labelledby="release-title">
+        <p class="micro-label">CURRENT RELEASE</p>
+        <h2 id="release-title">v0.6.0: быстрее к первому полезному ответу.</h2>
+        <div class="release-points">
+          <p>Утренний брифинг собирает погоду, задачи, события и Memory Center в один daily-flow.</p>
+          <p>macOS setup идет через `scripts/setup_mac.sh` и не перезаписывает существующий `.env`.</p>
+          <p>`doctor` проверяет Python, virtualenv, зависимости, Ollama, TTS, storage, API auth и optional integrations.</p>
+        </div>
+      </section>
+
+      <section id="setup" class="editorial-section setup-section" aria-labelledby="setup-title">
+        <div class="section-kicker">FIRST RUN</div>
+        <div class="setup-layout">
+          <h2 id="setup-title">Пять команд до локального запуска.</h2>
+          <div class="terminal-block">
+            <button type="button" class="copy-button" data-copy-command>Copy</button>
+            <pre><code>git clone https://github.com/xelvhk/vasya_ai.git
+cd vasya_ai
+bash scripts/setup_mac.sh
+source .venv/bin/activate
+ollama pull llama3
+python scripts/doctor.py
+python main.py</code></pre>
+          </div>
+        </div>
+        <div class="setup-notes">
+          <p>Setup готовит `.venv`, зависимости, локальный `.env`, storage, memory wiki и voices.</p>
+          <p>Опциональный API режим: `python -m uvicorn apps.api.main:app --host 127.0.0.1 --port 8787 --reload`.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Vasya AI / local-first assistant / active development</p>
+      <a href="#top">BACK TO TOP</a>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
