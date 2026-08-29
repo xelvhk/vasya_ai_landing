@@ -210,15 +210,16 @@ select {
     url("assets/vasya-hero-generated.avif") type("image/avif"),
     url("assets/vasya-hero-generated.png") type("image/png")
   );
-  background-position: center center;
+  background-position: 58% center;
   background-size: cover;
+  left: 34%;
   transform: scale(1.01);
 }
 
 .hero-overlay {
   background:
     linear-gradient(180deg, rgba(0, 0, 0, 0.74) 0%, rgba(0, 0, 0, 0.1) 32%, rgba(0, 0, 0, 0.78) 100%),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.74) 0%, rgba(0, 0, 0, 0.24) 46%, rgba(0, 0, 0, 0.18) 100%);
+    linear-gradient(90deg, rgba(0, 0, 0, 0.98) 0%, rgba(0, 0, 0, 0.9) 28%, rgba(0, 0, 0, 0.34) 58%, rgba(0, 0, 0, 0.14) 100%);
 }
 
 .hero-content {
@@ -475,22 +476,19 @@ select {
 }
 
 .showcase-card {
-  background: #1d1f1f;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-card);
-  box-shadow: rgba(0, 0, 0, 0.44) 0 24px 70px -36px;
+  align-items: center;
   color: var(--color-paper);
   display: grid;
-  gap: 24px;
-  grid-template-columns: 0.86fr 1.14fr;
-  padding: 20px;
+  gap: clamp(32px, 6vw, 80px);
+  grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+  margin: 0 auto;
+  max-width: 1120px;
 }
 
 .showcase-copy {
   align-content: start;
   display: grid;
   gap: 14px;
-  padding: 8px 0 8px 8px;
 }
 
 .showcase-copy h3 {
@@ -515,46 +513,39 @@ select {
   color: var(--color-obsidian);
 }
 
-.showcase-panel {
-  background:
-    linear-gradient(180deg, rgba(22, 23, 23, 0.92), rgba(22, 23, 23, 0.98)),
-    image-set(
-      url("assets/vasya-hero-generated.avif") type("image/avif"),
-      url("assets/vasya-hero-generated.png") type("image/png")
-    );
-  background-position: center;
-  background-size: cover;
+.showcase-visual {
+  aspect-ratio: 4 / 5;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-image);
-  color: var(--color-paper);
-  display: grid;
-  gap: 10px;
-  min-height: 360px;
-  padding: 18px;
+  justify-self: end;
+  margin: 0;
+  max-width: 500px;
+  overflow: hidden;
+  width: 100%;
 }
 
-.panel-topline {
-  align-items: center;
-  display: flex;
-  gap: 8px;
+.showcase-visual img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
 }
 
-.panel-topline strong {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 400;
-  text-transform: uppercase;
+.showcase-flow {
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  margin-top: 16px;
 }
 
 .session-card {
-  align-self: end;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-  padding: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 72px minmax(0, 1fr);
+  padding: 16px 0;
 }
 
 .session-card.is-live {
-  border-color: rgba(73, 222, 128, 0.64);
+  border-bottom-color: rgba(201, 117, 68, 0.72);
 }
 
 .session-card p {
@@ -771,6 +762,7 @@ select {
 
   .hero-media {
     background-position: 58% center;
+    left: 0;
   }
 
   .hero-overlay {
@@ -821,15 +813,18 @@ select {
   }
 
   .showcase-card {
-    padding: 14px;
+    gap: 32px;
   }
 
-  .showcase-copy {
-    padding: 2px;
+  .showcase-visual {
+    justify-self: center;
+    max-width: 560px;
+    order: -1;
   }
 
-  .showcase-panel {
-    min-height: 330px;
+  .session-card {
+    gap: 12px;
+    grid-template-columns: 64px minmax(0, 1fr);
   }
 
   .capability-grid,

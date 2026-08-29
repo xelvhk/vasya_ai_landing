@@ -154,30 +154,38 @@
 
         <article class="showcase-card">
           <div class="showcase-copy">
-            <h3 data-i18n="showcaseTitle">Один экран для ежедневного потока: сказать, уточнить, сохранить, выполнить.</h3>
+            <h3 data-i18n="showcaseTitle">Вася не занимает весь экран. Он появляется в момент действия.</h3>
             <p data-i18n="showcaseBody">
-              Утренний брифинг, напоминания, диктовка, заметки и интеграционные
-              обновления спроектированы как обычные рабочие пути, а не demo-only tricks.
+              Голос запускает сценарий, shell показывает маршрут и подтверждение,
+              а результат сохраняется в локальной памяти.
             </p>
             <a class="button button-ghost-dark" href="#capabilities" data-i18n="showcaseCta">Смотреть возможности</a>
-          </div>
-          <div class="showcase-panel" aria-label="Превью рабочего потока Vasya AI" data-i18n-aria-label="showcaseAria">
-            <div class="panel-topline">
-              <strong data-i18n="panelTopline">голосовая сессия</strong>
-            </div>
-            <div class="session-card is-live">
-              <span data-i18n="sessionInputLabel">ввод</span>
-              <p data-i18n="sessionInput">Добавь встречу с Сашей завтра в 18:00 и напомни за час.</p>
-            </div>
-            <div class="session-card">
-              <span data-i18n="sessionRouteLabel">маршрут</span>
-              <p data-i18n="sessionRoute">calendar.create_event + reminder.confirmation + memory.note</p>
-            </div>
-            <div class="session-card">
-              <span data-i18n="sessionReplyLabel">ответ</span>
-              <p data-i18n="sessionReply">Готово. Я добавил событие и поставил напоминание.</p>
+            <div class="showcase-flow" aria-label="Пример рабочего потока Vasya AI" data-i18n-aria-label="showcaseAria">
+              <div class="session-card is-live">
+                <span data-i18n="sessionInputLabel">ввод</span>
+                <p data-i18n="sessionInput">Добавь встречу с Сашей завтра в 18:00 и напомни за час.</p>
+              </div>
+              <div class="session-card">
+                <span data-i18n="sessionRouteLabel">маршрут</span>
+                <p data-i18n="sessionRoute">calendar.create_event + reminder.confirmation + memory.note</p>
+              </div>
+              <div class="session-card">
+                <span data-i18n="sessionReplyLabel">ответ</span>
+                <p data-i18n="sessionReply">Готово. Я добавил событие и поставил напоминание.</p>
+              </div>
             </div>
           </div>
+          <figure class="showcase-visual">
+            <img
+              src="assets/vasya-presence-v2.webp"
+              width="1122"
+              height="1402"
+              loading="lazy"
+              decoding="async"
+              alt="Вася как компактное голосовое присутствие рядом с ноутбуком"
+              data-i18n-alt="showcaseImageAlt"
+            />
+          </figure>
         </article>
       </section>
 

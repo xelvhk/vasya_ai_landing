@@ -60,11 +60,11 @@ const translations = {
     featureThreeTitle: "Интеграции как адаптеры",
     featureThreeBody: "Obsidian, Notion, GitHub и календарные сценарии живут отдельно от ядра ассистента.",
     showcaseLabel: "Рабочий поток",
-    showcaseTitle: "Один экран для ежедневного потока: сказать, уточнить, сохранить, выполнить.",
-    showcaseBody: "Утренний брифинг, напоминания, диктовка, заметки и интеграционные обновления спроектированы как обычные рабочие пути, а не demo-only tricks.",
+    showcaseTitle: "Вася не занимает весь экран. Он появляется в момент действия.",
+    showcaseBody: "Голос запускает сценарий, shell показывает маршрут и подтверждение, а результат сохраняется в локальной памяти.",
     showcaseCta: "Смотреть возможности",
-    showcaseAria: "Превью рабочего потока Vasya AI",
-    panelTopline: "голосовая сессия",
+    showcaseAria: "Пример рабочего потока Vasya AI",
+    showcaseImageAlt: "Вася как компактное голосовое присутствие рядом с ноутбуком",
     sessionInputLabel: "ввод",
     sessionInput: "Добавь встречу с Сашей завтра в 18:00 и напомни за час.",
     sessionRouteLabel: "маршрут",
@@ -164,11 +164,11 @@ const translations = {
     featureThreeTitle: "Integrations as adapters",
     featureThreeBody: "Obsidian, Notion, GitHub, and calendar workflows sit outside the assistant core.",
     showcaseLabel: "Workflow",
-    showcaseTitle: "One screen for the daily flow: say it, confirm it, save it, run it.",
-    showcaseBody: "Morning brief, reminders, dictation, notes, and integration updates are designed as ordinary working paths, not demo-only tricks.",
+    showcaseTitle: "Vasya does not take over the screen. He appears when an action needs attention.",
+    showcaseBody: "Voice starts the workflow, the shell shows its route and confirmation, and local memory keeps the result.",
     showcaseCta: "See capabilities",
-    showcaseAria: "Vasya AI workflow preview",
-    panelTopline: "voice session",
+    showcaseAria: "Vasya AI workflow example",
+    showcaseImageAlt: "Vasya represented as a compact voice presence beside a laptop",
     sessionInputLabel: "input",
     sessionInput: "Add a meeting with Sasha tomorrow at 18:00 and remind me one hour before.",
     sessionRouteLabel: "route",
@@ -270,6 +270,11 @@ function applyLanguage(language, { updateUrl = false } = {}) {
   document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
     const key = element.dataset.i18nAriaLabel;
     if (dictionary[key]) element.setAttribute("aria-label", dictionary[key]);
+  });
+
+  document.querySelectorAll("[data-i18n-alt]").forEach((element) => {
+    const key = element.dataset.i18nAlt;
+    if (dictionary[key]) element.setAttribute("alt", dictionary[key]);
   });
 
   languageButtons.forEach((button) => {
