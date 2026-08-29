@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Vasya AI: локальный голосовой ассистент</title>
+    <title>Vasya AI: локальный голосовой помощник</title>
     <meta
       name="description"
-      content="Vasya AI: локальный голосовой ассистент для продуктивности: голосовое управление, память, интеграции и FastAPI gateway."
+      content="Vasya AI помогает голосом управлять задачами, встречами, заметками и памятью. Работает локально и оставляет данные под вашим контролем."
     />
     <link rel="canonical" href="https://xelvhk.github.io/vasya_ai_landing/" />
     <link rel="alternate" hreflang="ru" href="https://xelvhk.github.io/vasya_ai_landing/?lang=ru" />
@@ -14,12 +14,12 @@
     <link rel="alternate" hreflang="x-default" href="https://xelvhk.github.io/vasya_ai_landing/" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://xelvhk.github.io/vasya_ai_landing/" />
-    <meta property="og:title" content="Vasya AI: локальный голосовой ассистент" />
-    <meta property="og:description" content="Локальный голосовой ассистент для продуктивности, голосовое управление, память, интеграции и FastAPI gateway." />
+    <meta property="og:title" content="Vasya AI: локальный голосовой помощник" />
+    <meta property="og:description" content="Vasya AI помогает голосом управлять задачами, встречами, заметками и памятью. Работает локально и оставляет данные под вашим контролем." />
     <meta property="og:image" content="https://xelvhk.github.io/vasya_ai_landing/assets/vasya-hero-generated.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Vasya AI: локальный голосовой ассистент" />
-    <meta name="twitter:description" content="Локальный голосовой ассистент для продуктивности, голосовое управление, память, интеграции и FastAPI gateway." />
+    <meta name="twitter:title" content="Vasya AI: локальный голосовой помощник" />
+    <meta name="twitter:description" content="Vasya AI помогает голосом управлять задачами, встречами, заметками и памятью. Работает локально и оставляет данные под вашим контролем." />
     <meta name="twitter:image" content="https://xelvhk.github.io/vasya_ai_landing/assets/vasya-hero-generated.png" />
     <link rel="preload" href="assets/vasya-hero-generated.avif" as="image" type="image/avif" />
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
@@ -38,10 +38,10 @@
         <span class="brand-copy">Vasya AI</span>
       </a>
       <nav class="nav-links" aria-label="Основная навигация" data-i18n-aria-label="mainNav">
-        <a href="#product" data-i18n="navProduct">Продукт</a>
-        <a href="#capabilities" data-i18n="navCapabilities">Возможности</a>
-        <a href="#system" data-i18n="navSystem">Система</a>
-        <a href="#launch" data-i18n="navLaunch">Запуск</a>
+        <a href="#product" data-i18n="navProduct">О Васе</a>
+        <a href="#capabilities" data-i18n="navCapabilities">Что умеет</a>
+        <a href="#system" data-i18n="navSystem">Как устроен</a>
+        <a href="#launch" data-i18n="navLaunch">Как запустить</a>
       </nav>
       <div class="header-actions">
         <div class="language-switch" role="group" aria-label="Выбор языка" data-i18n-aria-label="languageSwitch">
@@ -49,7 +49,7 @@
           <button class="language-option" type="button" data-language-option="en" aria-pressed="false">EN</button>
         </div>
         <a class="nav-link-ghost" href="https://github.com/xelvhk/vasya_ai" target="_blank" rel="noreferrer" data-i18n="navGithub">GitHub</a>
-        <a class="nav-cta" href="#launch" data-i18n="navCta">Запустить локально</a>
+        <a class="nav-cta" href="#launch" data-i18n="navCta">Запустить Васю</a>
       </div>
     </header>
 
@@ -58,39 +58,35 @@
         <div class="hero-media" aria-hidden="true"></div>
         <div class="hero-overlay"></div>
         <div class="hero-content">
-          <p class="status-badge" data-i18n="heroBadge">локальный голосовой слой</p>
+          <p class="status-badge" data-i18n="heroBadge">локальный голосовой помощник</p>
           <h1 id="hero-title">Vasya AI</h1>
-          <p class="hero-lede" data-i18n="heroLede">
-            Голосовой ассистент, который живет рядом с рабочим столом: понимает
-            команды, ведет память, запускает интеграции и остается под вашим
-            контролем.
-          </p>
+          <p class="hero-lede" data-i18n="heroLede">Скажите, что нужно сделать. Вася добавит встречу, сохранит заметку, найдёт нужное и ответит голосом.</p>
           <div class="hero-actions">
-            <a class="button button-primary" href="#launch" data-i18n="heroPrimary">Запустить локально</a>
+            <a class="button button-primary" href="#launch" data-i18n="heroPrimary">Запустить Васю</a>
             <a class="button button-outline" href="https://github.com/xelvhk/vasya_ai" target="_blank" rel="noreferrer" data-i18n="heroGithub">GitHub</a>
           </div>
         </div>
       </section>
 
-      <section class="stats-band" aria-label="Готовность продукта" data-i18n-aria-label="statsAria">
+      <section class="stats-band" aria-label="Коротко о Васе" data-i18n-aria-label="statsAria">
         <div class="stat-item">
-          <span data-i18n="statOneLabel">ГОЛОСОВОЙ ЦИКЛ</span>
-          <strong data-i18n="statOneValue">STT → намерение → действие → TTS</strong>
+          <span data-i18n="statOneLabel">ОТ СЛОВ К ДЕЛУ</span>
+          <strong data-i18n="statOneValue">Слышит, понимает, выполняет, отвечает</strong>
         </div>
         <div class="stat-item">
-          <span data-i18n="statTwoLabel">ЛОКАЛЬНОЕ ЯДРО</span>
-          <strong data-i18n="statTwoValue">SQLite, файлы, Ollama</strong>
+          <span data-i18n="statTwoLabel">РАБОТАЕТ ЛОКАЛЬНО</span>
+          <strong data-i18n="statTwoValue">Данные и память остаются у вас</strong>
         </div>
         <div class="stat-item">
-          <span data-i18n="statThreeLabel">API СЛОЙ</span>
-          <strong data-i18n="statThreeValue">FastAPI для thin clients</strong>
+          <span data-i18n="statThreeLabel">МОЖНО РАСШИРЯТЬ</span>
+          <strong data-i18n="statThreeValue">Подключайте нужные сервисы через API</strong>
         </div>
       </section>
 
-      <section class="trust-strip" aria-label="Ключевые поверхности продукта" data-i18n-aria-label="trustAria">
-        <span data-i18n="trustVoice">голосовой pipeline</span>
-        <span data-i18n="trustMemory">центр памяти</span>
-        <span data-i18n="trustDesktop">desktop shell</span>
+      <section class="trust-strip" aria-label="Что есть у Васи" data-i18n-aria-label="trustAria">
+        <span data-i18n="trustVoice">голосовые команды</span>
+        <span data-i18n="trustMemory">локальная память</span>
+        <span data-i18n="trustDesktop">приложение для компьютера</span>
         <span>obsidian</span>
         <span>notion</span>
         <span>github</span>
@@ -98,79 +94,72 @@
 
       <section class="section proof-section" aria-labelledby="proof-title">
         <div class="section-head">
-          <h2 id="proof-title" data-i18n="proofTitle">У лендинга есть продуктовая опора, а не только настроение.</h2>
+          <h2 id="proof-title" data-i18n="proofTitle">Уже помогает в реальных задачах.</h2>
         </div>
         <div class="proof-grid">
           <article class="proof-card">
-            <span data-i18n="proofOneStatus">live</span>
-            <h3 data-i18n="proofOneTitle">Voice loop</h3>
-            <p data-i18n="proofOneBody">STT, intent routing, tool dispatch and TTS replies form the core interaction path.</p>
+            <span data-i18n="proofOneStatus">работает</span>
+            <h3 data-i18n="proofOneTitle">Слышит и отвечает</h3>
+            <p data-i18n="proofOneBody">Распознаёт речь, понимает просьбу, выполняет команду и отвечает голосом.</p>
           </article>
           <article class="proof-card">
-            <span data-i18n="proofTwoStatus">ready</span>
-            <h3 data-i18n="proofTwoTitle">Doctor checks</h3>
-            <p data-i18n="proofTwoBody">Setup validation covers Python, dependencies, Ollama, storage, API auth and optional integrations.</p>
+            <span data-i18n="proofTwoStatus">готово</span>
+            <h3 data-i18n="proofTwoTitle">Проверяет себя перед запуском</h3>
+            <p data-i18n="proofTwoBody">Заранее сообщает, всё ли готово: Python, модель, голос, хранилище и подключённые сервисы.</p>
           </article>
           <article class="proof-card">
-            <span data-i18n="proofThreeStatus">growing</span>
-            <h3 data-i18n="proofThreeTitle">Memory Center</h3>
-            <p data-i18n="proofThreeBody">Local search, digest history and inspectable artifacts keep context auditable.</p>
+            <span data-i18n="proofThreeStatus">развивается</span>
+            <h3 data-i18n="proofThreeTitle">Помнит важное</h3>
+            <p data-i18n="proofThreeBody">Ищет по локальной памяти, показывает недавние записи и открывает найденные файлы и ссылки.</p>
           </article>
           <article class="proof-card">
-            <span data-i18n="proofFourStatus">open</span>
-            <h3 data-i18n="proofFourTitle">FastAPI gateway</h3>
-            <p data-i18n="proofFourBody">Chat, pipeline, realtime voice and memory routes prepare the project for thin clients.</p>
+            <span data-i18n="proofFourStatus">доступно</span>
+            <h3 data-i18n="proofFourTitle">Готов к новым интерфейсам</h3>
+            <p data-i18n="proofFourBody">Через FastAPI к Васе можно подключать другие приложения, не меняя его основную логику.</p>
           </article>
         </div>
       </section>
 
       <section id="product" class="section dark-section" aria-labelledby="product-title">
         <div class="section-head">
-          <h2 id="product-title" data-i18n="productTitle">Не chatbot, а персональный operating layer.</h2>
-          <p data-i18n="productBody">
-            Vasya AI собирает голос, память, задачи, календарь и локальные
-            артефакты в одну понятную систему. Фокус не на магии, а на
-            проверяемом пути от команды до результата.
-          </p>
+          <h2 id="product-title" data-i18n="productTitle">Не просто чат. Помощник, который умеет действовать.</h2>
+          <p data-i18n="productBody">Попросите Васю создать задачу, добавить встречу, сохранить заметку или найти информацию. Для удаления и очистки памяти он попросит подтверждение.</p>
         </div>
 
         <div class="feature-columns">
           <article class="feature-item">
             <span class="feature-icon">01</span>
-            <h3 data-i18n="featureOneTitle">Голосовой цикл команд</h3>
-            <p data-i18n="featureOneBody">Hotkey, recorder, speech-to-text, routing policy и быстрые голосовые ответы.</p>
+            <h3 data-i18n="featureOneTitle">Понимает голосовые команды</h3>
+            <p data-i18n="featureOneBody">Запускается по горячей клавише, распознаёт речь и отвечает голосом.</p>
           </article>
           <article class="feature-item">
             <span class="feature-icon">02</span>
-            <h3 data-i18n="featureTwoTitle">Память с provenance</h3>
-            <p data-i18n="featureTwoBody">Поиск по локальному контексту, дайджесты, recent artifacts и понятные границы источников.</p>
+            <h3 data-i18n="featureTwoTitle">Помнит контекст</h3>
+            <p data-i18n="featureTwoBody">Хранит заметки и историю локально, помогает быстро вернуться к нужной информации.</p>
           </article>
           <article class="feature-item">
             <span class="feature-icon">03</span>
-            <h3 data-i18n="featureThreeTitle">Интеграции как адаптеры</h3>
-            <p data-i18n="featureThreeBody">Obsidian, Notion, GitHub и календарные сценарии живут отдельно от ядра ассистента.</p>
+            <h3 data-i18n="featureThreeTitle">Работает с вашими сервисами</h3>
+            <p data-i18n="featureThreeBody">Подключается к Obsidian, Notion, GitHub и календарю, сохраняя понятные границы между сервисами.</p>
           </article>
         </div>
 
         <article class="showcase-card">
           <div class="showcase-copy">
-            <h3 data-i18n="showcaseTitle">Вася не занимает весь экран. Он появляется в момент действия.</h3>
-            <p data-i18n="showcaseBody">
-              Голос запускает сценарий, shell показывает маршрут и подтверждение,
-              а результат сохраняется в локальной памяти.
-            </p>
-            <a class="button button-ghost-dark" href="#capabilities" data-i18n="showcaseCta">Смотреть возможности</a>
-            <div class="showcase-flow" aria-label="Пример рабочего потока Vasya AI" data-i18n-aria-label="showcaseAria">
+            <h3 data-i18n="showcaseTitle">Попросите. Проверьте. Готово.</h3>
+            <p data-i18n="showcaseBody">Вася показывает, что понял, какое действие выполнит и что сохранил в памяти.</p>
+            <a class="button button-ghost-dark" href="#capabilities" data-i18n="showcaseCta">Что умеет Вася</a>
+            <div class="showcase-flow" aria-label="Пример того, как Вася выполняет команду" data-i18n-aria-label="showcaseAria">
               <div class="session-card is-live">
-                <span data-i18n="sessionInputLabel">ввод</span>
+                <span data-i18n="sessionInputLabel">Вы сказали</span>
                 <p data-i18n="sessionInput">Добавь встречу с Сашей завтра в 18:00 и напомни за час.</p>
               </div>
               <div class="session-card">
-                <span data-i18n="sessionRouteLabel">маршрут</span>
-                <p data-i18n="sessionRoute">calendar.create_event + reminder.confirmation + memory.note</p>
+                <span data-i18n="sessionRouteLabel">Вася делает</span>
+                <p data-i18n="sessionRoute">Создать встречу, поставить напоминание и сохранить запись.</p>
               </div>
               <div class="session-card">
-                <span data-i18n="sessionReplyLabel">ответ</span>
+                <span data-i18n="sessionReplyLabel">Вася отвечает</span>
                 <p data-i18n="sessionReply">Готово. Я добавил событие и поставил напоминание.</p>
               </div>
             </div>
@@ -191,80 +180,73 @@
 
       <section id="capabilities" class="section paper-section" aria-labelledby="capabilities-title">
         <div class="section-head">
-          <h2 id="capabilities-title" data-i18n="capabilitiesTitle">Полезность строится слоями, а не обещаниями.</h2>
+          <h2 id="capabilities-title" data-i18n="capabilitiesTitle">Вася помогает в повседневной работе.</h2>
         </div>
 
         <div class="capability-grid">
           <article class="capability-card">
             <span>01</span>
-            <h3 data-i18n="capOneTitle">Ежедневный ассистент</h3>
-            <p data-i18n="capOneBody">Утренний брифинг, напоминания, быстрые заметки и контекст задач на день.</p>
+            <h3 data-i18n="capOneTitle">Начать день собранно</h3>
+            <p data-i18n="capOneBody">Собирает утренний обзор, напоминает о делах и помогает не потерять задачи на день.</p>
           </article>
           <article class="capability-card">
             <span>02</span>
-            <h3 data-i18n="capTwoTitle">Присутствие на desktop</h3>
-            <p data-i18n="capTwoBody">Tray control, widget, hotkey и видимые состояния ассистента без зависимости от браузера.</p>
+            <h3 data-i18n="capTwoTitle">Всегда рядом</h3>
+            <p data-i18n="capTwoBody">Живёт в меню и небольшом виджете, запускается по горячей клавише или клику.</p>
           </article>
           <article class="capability-card">
             <span>03</span>
-            <h3 data-i18n="capThreeTitle">Управляемая память</h3>
-            <p data-i18n="capThreeBody">Локальный поиск, история дайджестов, quick-open действия и проверяемые артефакты.</p>
+            <h3 data-i18n="capThreeTitle">Помнить важное</h3>
+            <p data-i18n="capThreeBody">Находит записи, показывает последние изменения и открывает нужные файлы и ссылки.</p>
           </article>
           <article class="capability-card">
             <span>04</span>
-            <h3 data-i18n="capFourTitle">Безопасные defaults</h3>
-            <p data-i18n="capFourBody">Auth на API routes, throttling, safer dictation hosts и редактирование чувствительных логов.</p>
+            <h3 data-i18n="capFourTitle">Беречь ваши данные</h3>
+            <p data-i18n="capFourBody">Хранит основную информацию локально, защищает API и скрывает чувствительные данные в журналах.</p>
           </article>
         </div>
       </section>
 
       <section id="system" class="section dark-section compact" aria-labelledby="system-title">
         <div class="section-head">
-          <h2 id="system-title" data-i18n="systemTitle">Чистые границы вместо хаотичной “магии ассистента”.</h2>
-          <p data-i18n="systemBody">
-            Input, orchestration, domain agents, services, storage, integrations
-            and API layer разделены так, чтобы проект можно было развивать без
-            расползания логики по UI.
-          </p>
+          <h2 id="system-title" data-i18n="systemTitle">Внутри всё разложено по местам.</h2>
+          <p data-i18n="systemBody">Вася отдельно принимает команду, понимает её, выбирает действие, обращается к нужному сервису и возвращает результат.</p>
         </div>
 
         <div class="system-row">
-          <div><span data-i18n="sysOneLabel">Ввод</span><strong data-i18n="sysOneValue">voice recorder<br />text commands</strong></div>
-          <div><span data-i18n="sysTwoLabel">Router</span><strong data-i18n="sysTwoValue">intent parser<br />policy layer</strong></div>
-          <div><span data-i18n="sysThreeLabel">Agents</span><strong data-i18n="sysThreeValue">task<br />calendar<br />note</strong></div>
-          <div><span data-i18n="sysFourLabel">Services</span><strong data-i18n="sysFourValue">memory<br />integrations</strong></div>
-          <div><span data-i18n="sysFiveLabel">Output</span><strong data-i18n="sysFiveValue">TTS<br />desktop<br />API</strong></div>
+          <div><span data-i18n="sysOneLabel">Команда</span><strong data-i18n="sysOneValue">голос<br />или текст</strong></div>
+          <div><span data-i18n="sysTwoLabel">Понимание</span><strong data-i18n="sysTwoValue">что вы<br />хотите</strong></div>
+          <div><span data-i18n="sysThreeLabel">Действие</span><strong data-i18n="sysThreeValue">задача<br />встреча<br />заметка</strong></div>
+          <div><span data-i18n="sysFourLabel">Сервисы</span><strong data-i18n="sysFourValue">память<br />интеграции</strong></div>
+          <div><span data-i18n="sysFiveLabel">Ответ</span><strong data-i18n="sysFiveValue">голос<br />приложение<br />API</strong></div>
         </div>
       </section>
 
       <section id="launch" class="section launch-section" aria-labelledby="launch-title">
         <div class="launch-copy">
-          <h2 id="launch-title" data-i18n="launchTitle">Запуск должен быть таким же ясным, как первый ответ Васи.</h2>
-          <p data-i18n="launchBody">
-            Clone, setup, doctor, model pull and first run. Минимум ceremony,
-            максимум проверяемости.
-          </p>
-          <div class="setup-steps" aria-label="Шаги локального запуска" data-i18n-aria-label="setupStepsAria">
+          <h2 id="launch-title" data-i18n="launchTitle">Запустить Васю можно шаг за шагом.</h2>
+          <p data-i18n="launchBody">Подготовьте окружение, проверьте зависимости и получите первый ответ. Скрипты подскажут, если чего-то не хватает.</p>
+          <div class="setup-steps" aria-label="Как запустить Васю локально" data-i18n-aria-label="setupStepsAria">
             <article>
-              <span data-i18n="setupOneKicker">подготовка</span>
-              <strong data-i18n="setupOneTitle">Setup</strong>
-              <p data-i18n="setupOneBody">Собирает окружение и локальные файлы без перезаписи существующего `.env`.</p>
+              <span data-i18n="setupOneKicker">окружение</span>
+              <strong data-i18n="setupOneTitle">Подготовить проект</strong>
+              <p data-i18n="setupOneBody">Устанавливает зависимости и создаёт локальные файлы, не перезаписывая существующий `.env`.</p>
             </article>
             <article>
               <span data-i18n="setupTwoKicker">проверка</span>
-              <strong data-i18n="setupTwoTitle">Doctor</strong>
-              <p data-i18n="setupTwoBody">Проверяет зависимости, storage, модель, TTS и интеграции перед первым запуском.</p>
+              <strong data-i18n="setupTwoTitle">Убедиться, что всё готово</strong>
+              <p data-i18n="setupTwoBody">Проверяет Python, хранилище, модель, голос и подключённые сервисы.</p>
             </article>
             <article>
-              <span data-i18n="setupThreeKicker">первый ответ</span>
-              <strong data-i18n="setupThreeTitle">First run</strong>
-              <p data-i18n="setupThreeBody">Запускает ассистента и показывает первый рабочий путь без ручной сборки контекста.</p>
+              <span data-i18n="setupThreeKicker">запуск</span>
+              <strong data-i18n="setupThreeTitle">Познакомиться с Васей</strong>
+              <p data-i18n="setupThreeBody">Запускает помощника и показывает, как получить первый рабочий ответ.</p>
             </article>
           </div>
         </div>
 
         <div class="terminal-block">
-          <button type="button" class="copy-button" data-copy-command data-i18n="copySetup">Копировать setup</button>
+          <button type="button" class="copy-button" data-copy-command data-i18n="copySetup">Скопировать команды</button>
           <pre><code>git clone https://github.com/xelvhk/vasya_ai.git
 cd vasya_ai
 bash scripts/setup_mac.sh
@@ -277,7 +259,7 @@ python main.py</code></pre>
     </main>
 
     <footer class="site-footer">
-      <p data-i18n="footerText">Vasya AI / локальный / голосовой / active development</p>
+      <p data-i18n="footerText">Vasya AI. Локальный голосовой помощник в активной разработке.</p>
       <a href="#top" data-i18n="backToTop">Наверх</a>
     </footer>
 
