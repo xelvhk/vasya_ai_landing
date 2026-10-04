@@ -31,7 +31,8 @@
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body id="top">
+    <a class="skip-link" href="#main-content" data-i18n="skipToContent">Перейти к содержанию</a>
     <header class="site-header" data-site-header>
       <a class="brand" href="#top" aria-label="Vasya AI home" data-i18n-aria-label="brandHome">
         <span class="brand-mark" aria-hidden="true">V</span>
@@ -53,7 +54,7 @@
       </div>
     </header>
 
-    <main id="top">
+    <main id="main-content" tabindex="-1">
       <section class="hero-section" aria-labelledby="hero-title">
         <div class="hero-media" aria-hidden="true"></div>
         <div class="hero-overlay"></div>
@@ -94,6 +95,7 @@
 
       <section class="section proof-section" aria-labelledby="proof-title">
         <div class="section-head">
+          <p class="section-label" data-i18n="proofLabel">Что уже работает</p>
           <h2 id="proof-title" data-i18n="proofTitle">Уже помогает в реальных задачах.</h2>
         </div>
         <div class="proof-grid">
@@ -122,6 +124,7 @@
 
       <section id="product" class="section dark-section" aria-labelledby="product-title">
         <div class="section-head">
+          <p class="section-label" data-i18n="productLabel">О Васе</p>
           <h2 id="product-title" data-i18n="productTitle">Не просто чат. Помощник, который умеет действовать.</h2>
           <p data-i18n="productBody">Попросите Васю создать задачу, добавить встречу, сохранить заметку или найти информацию. Для удаления и очистки памяти он попросит подтверждение.</p>
         </div>
@@ -146,6 +149,7 @@
 
         <article class="showcase-card">
           <div class="showcase-copy">
+            <p class="section-label" data-i18n="showcaseLabel">Пример</p>
             <h3 data-i18n="showcaseTitle">Попросите. Проверьте. Готово.</h3>
             <p data-i18n="showcaseBody">Вася показывает, что понял, какое действие выполнит и что сохранил в памяти.</p>
             <a class="button button-ghost-dark" href="#capabilities" data-i18n="showcaseCta">Что умеет Вася</a>
@@ -180,6 +184,7 @@
 
       <section id="capabilities" class="section paper-section" aria-labelledby="capabilities-title">
         <div class="section-head">
+          <p class="section-label" data-i18n="capabilitiesLabel">Что умеет</p>
           <h2 id="capabilities-title" data-i18n="capabilitiesTitle">Вася помогает в повседневной работе.</h2>
         </div>
 
@@ -209,6 +214,7 @@
 
       <section id="system" class="section dark-section compact" aria-labelledby="system-title">
         <div class="section-head">
+          <p class="section-label" data-i18n="systemLabel">Как устроен</p>
           <h2 id="system-title" data-i18n="systemTitle">Внутри всё разложено по местам.</h2>
           <p data-i18n="systemBody">Вася отдельно принимает команду, понимает её, выбирает действие, обращается к нужному сервису и возвращает результат.</p>
         </div>
@@ -224,6 +230,7 @@
 
       <section id="launch" class="section launch-section" aria-labelledby="launch-title">
         <div class="launch-copy">
+          <p class="section-label" data-i18n="launchLabel">Как запустить</p>
           <h2 id="launch-title" data-i18n="launchTitle">Запустить Васю можно шаг за шагом.</h2>
           <p data-i18n="launchBody">Подготовьте окружение, проверьте зависимости и получите первый ответ. Скрипты подскажут, если чего-то не хватает.</p>
           <div class="setup-steps" aria-label="Как запустить Васю локально" data-i18n-aria-label="setupStepsAria">
