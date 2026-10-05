@@ -25,8 +25,7 @@ Live site: https://xelvhk.github.io/vasya_ai_landing/
 ├── assets/
 │   ├── favicon.svg
 │   ├── vasya-hero-generated.avif
-│   ├── vasya-hero-generated.png
-│   └── vasya-hero.jpeg
+│   └── vasya-hero-generated.png
 ├── index.html
 ├── script.js
 └── styles.css
