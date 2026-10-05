@@ -277,10 +277,7 @@ button:focus-visible {
 }
 
 .hero-media {
-  background-image: image-set(
-    url("assets/vasya-hero-generated.avif") type("image/avif"),
-    url("assets/vasya-hero-generated.png") type("image/png")
-  );
+  background-image: url("assets/vasya-hero-pixel-desktop.webp");
   background-position: center;
   background-size: cover;
 }
@@ -925,7 +922,8 @@ button:focus-visible {
   }
 
   .hero-media {
-    background-position: 58% center;
+    background-image: url("assets/vasya-hero-pixel-mobile.webp");
+    background-position: 73% center;
   }
 
   .hero-overlay {
