@@ -804,6 +804,40 @@ input[type="range"]:focus-visible {
   width: 72px;
 }
 
+.lofi-modes {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  display: grid;
+  gap: 2px;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 2px;
+}
+
+.lofi-modes button {
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  color: var(--color-fog);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  min-height: 32px;
+  padding: 5px 7px;
+  transition: background var(--motion-fast) ease, color var(--motion-fast) ease;
+  white-space: nowrap;
+}
+
+.lofi-modes button:hover,
+.lofi-modes button:focus-visible {
+  color: var(--color-paper);
+}
+
+.lofi-modes button.is-active {
+  background: var(--color-paper);
+  color: var(--color-obsidian);
+}
+
 .lofi-status {
   grid-column: 1 / -1;
   min-height: 15px;
@@ -1206,8 +1240,10 @@ input[type="range"]:focus-visible {
     right: 8px;
   }
 
+  .lofi-copy strong { font-size: 12px; }
+  .lofi-controls { gap: 6px; }
   .lofi-level { display: none; }
-  .lofi-volume { width: 64px; }
+  .lofi-volume { width: 48px; }
 }
 
 @media (max-width: 360px) {

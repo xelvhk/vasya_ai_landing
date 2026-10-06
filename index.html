@@ -185,15 +185,21 @@
                 <strong data-i18n="lofiTitle">Фокус с Васей</strong>
               </div>
               <div class="lofi-controls">
-                <button class="lofi-toggle" type="button" aria-label="Включить lo-fi музыку" aria-pressed="false" data-lofi-toggle>
+                <button class="lofi-toggle" type="button" aria-label="Включить звук для фокуса" aria-pressed="false" data-lofi-toggle>
                   <svg class="lofi-icon lofi-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z" /></svg>
                   <svg class="lofi-icon lofi-icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg>
                 </button>
                 <span class="lofi-level" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-                <label class="visually-hidden" for="lofi-volume" data-i18n="lofiVolumeLabel">Громкость музыки</label>
-                <input id="lofi-volume" class="lofi-volume" type="range" min="0" max="1" step="0.05" value="0.32" aria-label="Громкость музыки" data-i18n-aria-label="lofiVolumeLabel" data-lofi-volume />
+                <label class="visually-hidden" for="lofi-volume" data-i18n="lofiVolumeLabel">Громкость звука</label>
+                <input id="lofi-volume" class="lofi-volume" type="range" min="0" max="1" step="0.05" value="0.32" aria-label="Громкость звука" data-i18n-aria-label="lofiVolumeLabel" data-lofi-volume />
               </div>
-              <span class="lofi-status" aria-live="polite" data-lofi-status>Музыка выключена</span>
+              <div class="lofi-modes" role="group" aria-label="Выбор звука для фокуса" data-i18n-aria-label="lofiModeGroup">
+                <button class="is-active" type="button" aria-pressed="true" data-lofi-mode="warm" data-i18n="lofiModeWarm">Тёплый</button>
+                <button type="button" aria-pressed="false" data-lofi-mode="night" data-i18n="lofiModeNight">Ночь</button>
+                <button type="button" aria-pressed="false" data-lofi-mode="pulse" data-i18n="lofiModePulse">Пульс</button>
+                <button type="button" aria-pressed="false" data-lofi-mode="rain" data-i18n="lofiModeRain">Дождь</button>
+              </div>
+              <span class="lofi-status" aria-live="polite" data-lofi-status>Звук выключен</span>
             </figcaption>
           </figure>
         </article>
