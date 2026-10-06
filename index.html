@@ -169,7 +169,7 @@
               </div>
             </div>
           </div>
-          <figure class="showcase-visual">
+          <figure class="showcase-visual" data-lofi-player>
             <img
               src="assets/vasya-showcase-pixel.webp"
               width="1122"
@@ -179,6 +179,22 @@
               alt="Пиксельный помощник Вася работает за ноутбуком"
               data-i18n-alt="showcaseImageAlt"
             />
+            <figcaption class="lofi-console">
+              <div class="lofi-copy">
+                <span data-i18n="lofiEyebrow">lo-fi режим</span>
+                <strong data-i18n="lofiTitle">Фокус с Васей</strong>
+              </div>
+              <div class="lofi-controls">
+                <button class="lofi-toggle" type="button" aria-label="Включить lo-fi музыку" aria-pressed="false" data-lofi-toggle>
+                  <svg class="lofi-icon lofi-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z" /></svg>
+                  <svg class="lofi-icon lofi-icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg>
+                </button>
+                <span class="lofi-level" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <label class="visually-hidden" for="lofi-volume" data-i18n="lofiVolumeLabel">Громкость музыки</label>
+                <input id="lofi-volume" class="lofi-volume" type="range" min="0" max="1" step="0.05" value="0.32" aria-label="Громкость музыки" data-i18n-aria-label="lofiVolumeLabel" data-lofi-volume />
+              </div>
+              <span class="lofi-status" aria-live="polite" data-lofi-status>Музыка выключена</span>
+            </figcaption>
           </figure>
         </article>
       </section>

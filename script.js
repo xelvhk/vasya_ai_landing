@@ -1,5 +1,9 @@
 const copyButton = document.querySelector("[data-copy-command]");
 const languageButtons = document.querySelectorAll("[data-language-option]");
+const lofiPlayer = document.querySelector("[data-lofi-player]");
+const lofiToggle = document.querySelector("[data-lofi-toggle]");
+const lofiVolume = document.querySelector("[data-lofi-volume]");
+const lofiStatus = document.querySelector("[data-lofi-status]");
 const setupCommand = `git clone https://github.com/xelvhk/vasya_ai.git
 cd vasya_ai
 bash scripts/setup_mac.sh
@@ -66,6 +70,14 @@ const translations = {
     showcaseCta: "Что умеет Вася",
     showcaseAria: "Пример того, как Вася выполняет команду",
     showcaseImageAlt: "Пиксельный помощник Вася работает за ноутбуком",
+    lofiEyebrow: "lo-fi режим",
+    lofiTitle: "Фокус с Васей",
+    lofiVolumeLabel: "Громкость музыки",
+    lofiPlayLabel: "Включить lo-fi музыку",
+    lofiPauseLabel: "Поставить lo-fi музыку на паузу",
+    lofiStopped: "Музыка выключена",
+    lofiPlaying: "Играет спокойная музыка",
+    lofiUnsupported: "Музыка не поддерживается в этом браузере",
     sessionInputLabel: "Вы сказали",
     sessionInput: "Добавь встречу с Сашей завтра в 18:00 и напомни за час.",
     sessionRouteLabel: "Вася делает",
@@ -171,6 +183,14 @@ const translations = {
     showcaseCta: "What Vasya can do",
     showcaseAria: "Example of Vasya completing a command",
     showcaseImageAlt: "Pixel-art assistant Vasya working at a laptop",
+    lofiEyebrow: "lo-fi mode",
+    lofiTitle: "Focus with Vasya",
+    lofiVolumeLabel: "Music volume",
+    lofiPlayLabel: "Play lo-fi music",
+    lofiPauseLabel: "Pause lo-fi music",
+    lofiStopped: "Music is off",
+    lofiPlaying: "Calm music is playing",
+    lofiUnsupported: "Music is not supported in this browser",
     sessionInputLabel: "You said",
     sessionInput: "Add a meeting with Sasha tomorrow at 18:00 and remind me one hour before.",
     sessionRouteLabel: "Vasya does",
@@ -254,6 +274,192 @@ function setMeta(name, value, attr = "name") {
   document.querySelector(`meta[${attr}="${name}"]`)?.setAttribute("content", value);
 }
 
+let activeLanguage = "ru";
+let audioContext = null;
+let lofiMaster = null;
+let lofiScheduler = null;
+let nextChordTime = 0;
+let chordIndex = 0;
+let isLofiPlaying = false;
+let lofiTransitioning = false;
+
+const lofiTempo = 72;
+const chordDuration = (60 / lofiTempo) * 4;
+const chordProgression = [
+  [48, 55, 59, 64],
+  [45, 52, 55, 60],
+  [41, 48, 52, 57],
+  [43, 50, 53, 59],
+];
+
+function midiToFrequency(note) {
+  return 440 * 2 ** ((note - 69) / 12);
+}
+
+function createVinylNoise(context) {
+  const buffer = context.createBuffer(1, context.sampleRate * 3, context.sampleRate);
+  const samples = buffer.getChannelData(0);
+  let brownNoise = 0;
+
+  for (let index = 0; index < samples.length; index += 1) {
+    brownNoise = (brownNoise + 0.02 * (Math.random() * 2 - 1)) / 1.02;
+    samples[index] = brownNoise * 2.8;
+  }
+
+  const source = context.createBufferSource();
+  const highPass = context.createBiquadFilter();
+  const lowPass = context.createBiquadFilter();
+  const gain = context.createGain();
+  source.buffer = buffer;
+  source.loop = true;
+  highPass.type = "highpass";
+  highPass.frequency.value = 320;
+  lowPass.type = "lowpass";
+  lowPass.frequency.value = 3600;
+  gain.gain.value = 0.012;
+  source.connect(highPass).connect(lowPass).connect(gain).connect(lofiMaster);
+  source.start();
+}
+
+function scheduleVoice(note, start, duration, options = {}) {
+  const oscillator = audioContext.createOscillator();
+  const filter = audioContext.createBiquadFilter();
+  const gain = audioContext.createGain();
+  const attack = options.attack || 0.35;
+  const level = options.level || 0.03;
+
+  oscillator.type = options.type || "triangle";
+  oscillator.frequency.value = midiToFrequency(note);
+  oscillator.detune.value = options.detune || 0;
+  filter.type = "lowpass";
+  filter.frequency.value = options.cutoff || 1100;
+  filter.Q.value = 0.5;
+
+  gain.gain.setValueAtTime(0.0001, start);
+  gain.gain.exponentialRampToValueAtTime(level, start + attack);
+  gain.gain.setValueAtTime(level, start + Math.max(attack, duration - 0.65));
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+
+  oscillator.connect(filter).connect(gain).connect(lofiMaster);
+  oscillator.start(start);
+  oscillator.stop(start + duration + 0.05);
+}
+
+function scheduleChord(chord, start) {
+  chord.forEach((note, index) => {
+    scheduleVoice(note, start, chordDuration + 0.08, {
+      attack: 0.48,
+      cutoff: 920 + index * 90,
+      detune: (index - 1.5) * 2,
+      level: 0.025,
+      type: index % 2 === 0 ? "triangle" : "sine",
+    });
+  });
+
+  scheduleVoice(chord[0] - 12, start, chordDuration * 0.72, {
+    attack: 0.08,
+    cutoff: 340,
+    level: 0.045,
+    type: "sine",
+  });
+
+  [0.5, 1.5, 2.5].forEach((beat, index) => {
+    scheduleVoice(chord[(index + 2) % chord.length] + 12, start + beat * (60 / lofiTempo), 0.42, {
+      attack: 0.012,
+      cutoff: 1450,
+      level: 0.011,
+      type: "sine",
+    });
+  });
+}
+
+function scheduleLofiAhead() {
+  if (!audioContext || !isLofiPlaying) return;
+
+  while (nextChordTime < audioContext.currentTime + 0.4) {
+    scheduleChord(chordProgression[chordIndex], nextChordTime);
+    nextChordTime += chordDuration;
+    chordIndex = (chordIndex + 1) % chordProgression.length;
+  }
+}
+
+function setLofiVolume(value, duration = 0.12) {
+  if (!audioContext || !lofiMaster) return;
+
+  const now = audioContext.currentTime;
+  lofiMaster.gain.cancelScheduledValues(now);
+  lofiMaster.gain.setValueAtTime(lofiMaster.gain.value, now);
+  lofiMaster.gain.linearRampToValueAtTime(value, now + duration);
+}
+
+function initializeLofi() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return false;
+
+  audioContext = new AudioContextClass();
+  const compressor = audioContext.createDynamicsCompressor();
+  lofiMaster = audioContext.createGain();
+  lofiMaster.gain.value = 0;
+  compressor.threshold.value = -18;
+  compressor.knee.value = 18;
+  compressor.ratio.value = 3;
+  compressor.attack.value = 0.02;
+  compressor.release.value = 0.35;
+  lofiMaster.connect(compressor).connect(audioContext.destination);
+  createVinylNoise(audioContext);
+  return true;
+}
+
+function updateLofiUI(dictionary = translations[activeLanguage]) {
+  if (!lofiPlayer || !lofiToggle || !lofiStatus) return;
+
+  const supported = Boolean(window.AudioContext || window.webkitAudioContext);
+  const label = isLofiPlaying ? dictionary.lofiPauseLabel : dictionary.lofiPlayLabel;
+  lofiPlayer.classList.toggle("is-playing", isLofiPlaying);
+  lofiToggle.setAttribute("aria-pressed", String(isLofiPlaying));
+  lofiToggle.setAttribute("aria-label", label);
+  lofiToggle.title = label;
+  lofiToggle.disabled = !supported;
+  lofiStatus.textContent = supported
+    ? isLofiPlaying
+      ? dictionary.lofiPlaying
+      : dictionary.lofiStopped
+    : dictionary.lofiUnsupported;
+}
+
+async function startLofi() {
+  if (!audioContext && !initializeLofi()) {
+    updateLofiUI();
+    return;
+  }
+
+  await audioContext.resume();
+  isLofiPlaying = true;
+  nextChordTime = audioContext.currentTime + 0.05;
+  scheduleLofiAhead();
+  lofiScheduler = window.setInterval(scheduleLofiAhead, 120);
+  setLofiVolume(Number(lofiVolume?.value || 0.32), 0.45);
+  updateLofiUI();
+}
+
+function stopLofi() {
+  if (!audioContext) return;
+
+  isLofiPlaying = false;
+  window.clearInterval(lofiScheduler);
+  lofiScheduler = null;
+  setLofiVolume(0, 0.18);
+  updateLofiUI();
+
+  const contextToClose = audioContext;
+  window.setTimeout(() => {
+    if (isLofiPlaying || audioContext !== contextToClose) return;
+    contextToClose.close();
+    audioContext = null;
+    lofiMaster = null;
+  }, 220);
+}
+
 function applyLanguage(language, { updateUrl = false } = {}) {
   const dictionary = translations[language] || translations.en;
   document.documentElement.lang = language;
@@ -286,6 +492,8 @@ function applyLanguage(language, { updateUrl = false } = {}) {
   });
 
   if (copyButton) copyButton.textContent = dictionary.copySetup;
+  activeLanguage = language;
+  updateLofiUI(dictionary);
   window.localStorage.setItem("vasya-language", language);
   if (updateUrl) syncLanguageUrl(language);
 }
@@ -294,6 +502,33 @@ languageButtons.forEach((button) => {
   button.addEventListener("click", () => {
     applyLanguage(button.dataset.languageOption || "en", { updateUrl: true });
   });
+});
+
+lofiToggle?.addEventListener("click", async () => {
+  if (lofiTransitioning) return;
+
+  lofiTransitioning = true;
+  try {
+    if (isLofiPlaying) {
+      stopLofi();
+    } else {
+      await startLofi();
+    }
+  } catch {
+    isLofiPlaying = false;
+    updateLofiUI();
+  } finally {
+    lofiTransitioning = false;
+  }
+});
+
+lofiVolume?.addEventListener("input", () => {
+  if (isLofiPlaying) setLofiVolume(Number(lofiVolume.value));
+});
+
+window.addEventListener("pagehide", () => {
+  window.clearInterval(lofiScheduler);
+  audioContext?.close();
 });
 
 copyButton?.addEventListener("click", async () => {
