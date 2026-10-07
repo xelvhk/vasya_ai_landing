@@ -292,7 +292,7 @@ function setMeta(name, value, attr = "name") {
 }
 
 let activeLanguage = "ru";
-let activeLofiMode = "rain";
+let activeLofiMode = "warm";
 let audioContext = null;
 let lofiMaster = null;
 let lofiScheduler = null;
@@ -306,9 +306,11 @@ let isLofiLoading = false;
 let lofiLoadError = false;
 let lofiTransitioning = false;
 let currentSampleSources = [];
+let currentMediaElements = [];
+let focusAudioPreloadStarted = false;
+const focusAudioPreloaders = [];
 
-const audioFileCache = new Map();
-const focusMixOrder = ["rain", "night", "pulse", "warm"];
+const focusMixOrder = ["warm", "rain", "night", "pulse"];
 const warmMixDurationMs = 180000;
 
 const focusScenes = {
@@ -389,14 +391,31 @@ function createVinylNoise(context) {
   source.start();
 }
 
-async function loadAudioFile(url) {
-  if (!audioFileCache.has(url)) {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Could not load ${url}: ${response.status}`);
-    audioFileCache.set(url, await response.arrayBuffer());
-  }
+function stopSamplePlayback() {
+  currentMediaElements.forEach((audio) => {
+    audio.pause();
+    audio.removeAttribute("src");
+    audio.load();
+  });
+  currentMediaElements = [];
+  currentSampleSources = [];
+}
 
-  return audioFileCache.get(url);
+function preloadFocusAudio() {
+  if (focusAudioPreloadStarted) return;
+  focusAudioPreloadStarted = true;
+
+  const urls = Object.values(focusScenes)
+    .flatMap((scene) => scene.sources || [])
+    .map((source) => source.url);
+
+  urls.forEach((url) => {
+    const audio = new Audio();
+    audio.preload = "auto";
+    audio.src = url;
+    audio.load();
+    focusAudioPreloaders.push(audio);
+  });
 }
 
 async function startSampleScene(context, scene, { loop = true, onEnded = null } = {}) {
@@ -406,25 +425,26 @@ async function startSampleScene(context, scene, { loop = true, onEnded = null } 
       : scene.sources;
 
   currentSampleSources = selectedSources.map((source) => source.url);
-  const decodedTracks = await Promise.all(
-    selectedSources.map(async (source) => ({
-      ...source,
-      buffer: await context.decodeAudioData((await loadAudioFile(source.url)).slice(0)),
-    })),
-  );
-
-  if (context !== audioContext) return;
-
-  decodedTracks.forEach((track, index) => {
-    const source = context.createBufferSource();
+  currentMediaElements = selectedSources.map((track, index) => {
+    const audio = new Audio(track.url);
+    const source = context.createMediaElementSource(audio);
     const gain = context.createGain();
-    source.buffer = track.buffer;
-    source.loop = loop;
-    if (index === 0 && onEnded) source.addEventListener("ended", onEnded, { once: true });
+    audio.preload = "auto";
+    audio.loop = loop;
+    if (index === 0 && onEnded) audio.addEventListener("ended", onEnded, { once: true });
     gain.gain.value = track.gain;
     source.connect(gain).connect(lofiMaster);
-    source.start();
+    return audio;
   });
+
+  try {
+    await Promise.all(currentMediaElements.map((audio) => audio.play()));
+  } catch (error) {
+    stopSamplePlayback();
+    throw error;
+  }
+
+  if (context !== audioContext) stopSamplePlayback();
 }
 
 function scheduleVoice(note, start, duration, options = {}) {
@@ -575,7 +595,7 @@ async function startLofi() {
   const runId = ++lofiRunId;
   lofiLoadError = false;
   isLofiLoading = scene.type !== "music";
-  currentSampleSources = [];
+  stopSamplePlayback();
   updateLofiUI();
 
   await context.resume();
@@ -605,6 +625,7 @@ async function startLofi() {
 
   setLofiVolume(Number(lofiVolume?.value || 0.32), 0.45);
   updateLofiUI();
+  if (scene.type === "music") preloadFocusAudio();
 }
 
 async function restartLofi() {
@@ -613,6 +634,7 @@ async function restartLofi() {
   lofiScheduler = null;
   lofiMixTimer = null;
   lofiRunId += 1;
+  stopSamplePlayback();
   const previousContext = audioContext;
   audioContext = null;
   lofiMaster = null;
@@ -649,7 +671,7 @@ function stopLofi() {
   isLofiPlaying = false;
   isLofiLoading = false;
   lofiLoadError = false;
-  currentSampleSources = [];
+  stopSamplePlayback();
   lofiRunId += 1;
   window.clearInterval(lofiScheduler);
   window.clearTimeout(lofiMixTimer);
@@ -668,7 +690,7 @@ function handleLofiError() {
   isLofiPlaying = false;
   isLofiLoading = false;
   lofiLoadError = true;
-  currentSampleSources = [];
+  stopSamplePlayback();
   lofiRunId += 1;
   window.clearInterval(lofiScheduler);
   window.clearTimeout(lofiMixTimer);
@@ -772,6 +794,7 @@ lofiVolume?.addEventListener("input", () => {
 window.addEventListener("pagehide", () => {
   window.clearInterval(lofiScheduler);
   window.clearTimeout(lofiMixTimer);
+  stopSamplePlayback();
   audioContext?.close();
 });
 
