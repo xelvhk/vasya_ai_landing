@@ -78,12 +78,15 @@ const translations = {
     lofiPauseLabel: "Поставить звук на паузу",
     lofiStopped: "Звук выключен",
     lofiPlaying: "Играет",
+    lofiLoading: "Загружаем",
+    lofiLoadError: "Не удалось загрузить звук",
     lofiUnsupported: "Звук не поддерживается в этом браузере",
     lofiModeGroup: "Выбор звука для фокуса",
     lofiModeWarm: "Тёплый",
     lofiModeNight: "Ночь",
     lofiModePulse: "Пульс",
     lofiModeRain: "Дождь",
+    lofiModeMix: "Микс",
     sessionInputLabel: "Вы сказали",
     sessionInput: "Добавь встречу с Сашей завтра в 18:00 и напомни за час.",
     sessionRouteLabel: "Вася делает",
@@ -196,12 +199,15 @@ const translations = {
     lofiPauseLabel: "Pause the sound",
     lofiStopped: "Sound is off",
     lofiPlaying: "Playing",
+    lofiLoading: "Loading",
+    lofiLoadError: "Could not load the sound",
     lofiUnsupported: "Sound is not supported in this browser",
     lofiModeGroup: "Choose a focus sound",
     lofiModeWarm: "Warm",
     lofiModeNight: "Night",
     lofiModePulse: "Pulse",
     lofiModeRain: "Rain",
+    lofiModeMix: "Mix",
     sessionInputLabel: "You said",
     sessionInput: "Add a meeting with Sasha tomorrow at 18:00 and remind me one hour before.",
     sessionRouteLabel: "Vasya does",
@@ -286,14 +292,24 @@ function setMeta(name, value, attr = "name") {
 }
 
 let activeLanguage = "ru";
-let activeLofiMode = "warm";
+let activeLofiMode = "rain";
 let audioContext = null;
 let lofiMaster = null;
 let lofiScheduler = null;
+let lofiMixTimer = null;
+let lofiRunId = 0;
+let activeMixIndex = 0;
 let nextChordTime = 0;
 let chordIndex = 0;
 let isLofiPlaying = false;
+let isLofiLoading = false;
+let lofiLoadError = false;
 let lofiTransitioning = false;
+let currentSampleSources = [];
+
+const audioFileCache = new Map();
+const focusMixOrder = ["rain", "night", "pulse", "warm"];
+const warmMixDurationMs = 180000;
 
 const focusScenes = {
   warm: {
@@ -313,42 +329,36 @@ const focusScenes = {
     melodyLevel: 0.011,
   },
   night: {
-    type: "music",
+    type: "sample",
     labelKey: "lofiModeNight",
-    tempo: 60,
-    chords: [
-      [50, 57, 60, 64],
-      [46, 53, 57, 62],
-      [43, 50, 53, 57],
-      [45, 52, 55, 60],
-    ],
-    padCutoff: 720,
-    padLevel: 0.022,
-    bassLevel: 0.034,
-    melody: [0.75, 2.25, 3.1],
-    melodyLevel: 0.013,
+    sources: [{ url: "assets/focus-night.mp3", gain: 0.82 }],
   },
   pulse: {
-    type: "music",
+    type: "sample",
     labelKey: "lofiModePulse",
-    tempo: 84,
-    chords: [
-      [52, 59, 63, 66],
-      [48, 55, 59, 64],
-      [45, 52, 57, 60],
-      [47, 54, 57, 62],
-    ],
-    padCutoff: 1180,
-    padLevel: 0.018,
-    bassLevel: 0.038,
-    melody: [0.25, 0.75, 1.25, 1.75, 2.5, 3.25],
-    melodyLevel: 0.009,
+    sources: [{ url: "assets/focus-pulse.mp3", gain: 0.82 }],
   },
   rain: {
-    type: "rain",
+    type: "sample-choice",
     labelKey: "lofiModeRain",
+    sources: [
+      { url: "assets/focus-rain-soft.mp3", gain: 0.72 },
+      { url: "assets/focus-rain-deep.mp3", gain: 0.98 },
+    ],
+  },
+  mix: {
+    type: "mix",
+    labelKey: "lofiModeMix",
   },
 };
+
+function currentPlaybackMode() {
+  return activeLofiMode === "mix" ? focusMixOrder[activeMixIndex] : activeLofiMode;
+}
+
+function currentPlaybackScene() {
+  return focusScenes[currentPlaybackMode()];
+}
 
 function midiToFrequency(note) {
   return 440 * 2 ** ((note - 69) / 12);
@@ -379,57 +389,42 @@ function createVinylNoise(context) {
   source.start();
 }
 
-function createRain(context) {
-  const duration = 6;
-  const sampleCount = context.sampleRate * duration;
-  const bedBuffer = context.createBuffer(1, sampleCount, context.sampleRate);
-  const bed = bedBuffer.getChannelData(0);
-  let brownNoise = 0;
-
-  for (let index = 0; index < sampleCount; index += 1) {
-    const whiteNoise = Math.random() * 2 - 1;
-    brownNoise = (brownNoise + 0.035 * whiteNoise) / 1.035;
-    bed[index] = whiteNoise * 0.32 + brownNoise * 1.4;
+async function loadAudioFile(url) {
+  if (!audioFileCache.has(url)) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Could not load ${url}: ${response.status}`);
+    audioFileCache.set(url, await response.arrayBuffer());
   }
 
-  const bedSource = context.createBufferSource();
-  const bedHighPass = context.createBiquadFilter();
-  const bedLowPass = context.createBiquadFilter();
-  const bedGain = context.createGain();
-  bedSource.buffer = bedBuffer;
-  bedSource.loop = true;
-  bedHighPass.type = "highpass";
-  bedHighPass.frequency.value = 180;
-  bedLowPass.type = "lowpass";
-  bedLowPass.frequency.value = 6800;
-  bedGain.gain.value = 0.14;
-  bedSource.connect(bedHighPass).connect(bedLowPass).connect(bedGain).connect(lofiMaster);
-  bedSource.start();
+  return audioFileCache.get(url);
+}
 
-  const dropBuffer = context.createBuffer(1, sampleCount, context.sampleRate);
-  const drops = dropBuffer.getChannelData(0);
-  const dropCount = 170;
+async function startSampleScene(context, scene, { loop = true, onEnded = null } = {}) {
+  const selectedSources =
+    scene.type === "sample-choice"
+      ? [scene.sources[Math.floor(Math.random() * scene.sources.length)]]
+      : scene.sources;
 
-  for (let drop = 0; drop < dropCount; drop += 1) {
-    const start = Math.floor(Math.random() * (sampleCount - context.sampleRate * 0.06));
-    const length = Math.floor(context.sampleRate * (0.012 + Math.random() * 0.035));
-    const strength = 0.2 + Math.random() * 0.65;
-    for (let index = 0; index < length; index += 1) {
-      drops[start + index] += (Math.random() * 2 - 1) * strength * Math.exp(-index / (length * 0.22));
-    }
-  }
+  currentSampleSources = selectedSources.map((source) => source.url);
+  const decodedTracks = await Promise.all(
+    selectedSources.map(async (source) => ({
+      ...source,
+      buffer: await context.decodeAudioData((await loadAudioFile(source.url)).slice(0)),
+    })),
+  );
 
-  const dropSource = context.createBufferSource();
-  const dropFilter = context.createBiquadFilter();
-  const dropGain = context.createGain();
-  dropSource.buffer = dropBuffer;
-  dropSource.loop = true;
-  dropFilter.type = "bandpass";
-  dropFilter.frequency.value = 2400;
-  dropFilter.Q.value = 0.7;
-  dropGain.gain.value = 0.12;
-  dropSource.connect(dropFilter).connect(dropGain).connect(lofiMaster);
-  dropSource.start();
+  if (context !== audioContext) return;
+
+  decodedTracks.forEach((track, index) => {
+    const source = context.createBufferSource();
+    const gain = context.createGain();
+    source.buffer = track.buffer;
+    source.loop = loop;
+    if (index === 0 && onEnded) source.addEventListener("ended", onEnded, { once: true });
+    gain.gain.value = track.gain;
+    source.connect(gain).connect(lofiMaster);
+    source.start();
+  });
 }
 
 function scheduleVoice(note, start, duration, options = {}) {
@@ -490,7 +485,7 @@ function scheduleChord(scene, chord, start) {
 function scheduleLofiAhead() {
   if (!audioContext || !isLofiPlaying) return;
 
-  const scene = focusScenes[activeLofiMode];
+  const scene = currentPlaybackScene();
   if (scene.type !== "music") return;
 
   const chordDuration = (60 / scene.tempo) * 4;
@@ -525,9 +520,7 @@ function initializeLofi() {
   compressor.release.value = 0.35;
   lofiMaster.connect(compressor).connect(audioContext.destination);
 
-  if (focusScenes[activeLofiMode].type === "rain") {
-    createRain(audioContext);
-  } else {
+  if (currentPlaybackScene().type === "music") {
     createVinylNoise(audioContext);
   }
 
@@ -539,23 +532,36 @@ function updateLofiUI(dictionary = translations[activeLanguage]) {
 
   const supported = Boolean(window.AudioContext || window.webkitAudioContext);
   const label = isLofiPlaying ? dictionary.lofiPauseLabel : dictionary.lofiPlayLabel;
-  const sceneLabel = dictionary[focusScenes[activeLofiMode].labelKey];
+  const selectedSceneLabel = dictionary[focusScenes[activeLofiMode].labelKey];
+  const playbackSceneLabel = dictionary[currentPlaybackScene().labelKey];
+  const sceneLabel =
+    activeLofiMode === "mix"
+      ? `${selectedSceneLabel} · ${playbackSceneLabel}`
+      : selectedSceneLabel;
 
   lofiPlayer.classList.toggle("is-playing", isLofiPlaying);
   lofiToggle.setAttribute("aria-pressed", String(isLofiPlaying));
   lofiToggle.setAttribute("aria-label", label);
   lofiToggle.title = label;
-  lofiToggle.disabled = !supported;
+  lofiToggle.disabled = !supported || isLofiLoading;
   lofiModeButtons.forEach((button) => {
     const isActive = button.dataset.lofiMode === activeLofiMode;
     button.classList.toggle("is-active", isActive);
     button.setAttribute("aria-pressed", String(isActive));
+    button.disabled = isLofiLoading;
   });
-  lofiStatus.textContent = supported
-    ? isLofiPlaying
-      ? `${dictionary.lofiPlaying}: ${sceneLabel}`
-      : `${dictionary.lofiStopped} · ${sceneLabel}`
-    : dictionary.lofiUnsupported;
+
+  if (!supported) {
+    lofiStatus.textContent = dictionary.lofiUnsupported;
+  } else if (lofiLoadError) {
+    lofiStatus.textContent = dictionary.lofiLoadError;
+  } else if (isLofiLoading) {
+    lofiStatus.textContent = `${dictionary.lofiLoading}: ${sceneLabel}`;
+  } else if (isLofiPlaying) {
+    lofiStatus.textContent = `${dictionary.lofiPlaying}: ${sceneLabel}`;
+  } else {
+    lofiStatus.textContent = `${dictionary.lofiStopped} · ${sceneLabel}`;
+  }
 }
 
 async function startLofi() {
@@ -564,14 +570,37 @@ async function startLofi() {
     return;
   }
 
-  await audioContext.resume();
+  const context = audioContext;
+  const scene = currentPlaybackScene();
+  const runId = ++lofiRunId;
+  lofiLoadError = false;
+  isLofiLoading = scene.type !== "music";
+  currentSampleSources = [];
+  updateLofiUI();
+
+  await context.resume();
+  if (scene.type !== "music") {
+    await startSampleScene(context, scene, {
+      loop: activeLofiMode !== "mix",
+      onEnded:
+        activeLofiMode === "mix"
+          ? () => advanceMix(runId)
+          : null,
+    });
+    if (context !== audioContext || runId !== lofiRunId) return;
+  }
+
+  isLofiLoading = false;
   isLofiPlaying = true;
   chordIndex = 0;
-  nextChordTime = audioContext.currentTime + 0.05;
+  nextChordTime = context.currentTime + 0.05;
 
-  if (focusScenes[activeLofiMode].type === "music") {
+  if (scene.type === "music") {
     scheduleLofiAhead();
     lofiScheduler = window.setInterval(scheduleLofiAhead, 120);
+    if (activeLofiMode === "mix") {
+      lofiMixTimer = window.setTimeout(() => advanceMix(runId), warmMixDurationMs);
+    }
   }
 
   setLofiVolume(Number(lofiVolume?.value || 0.32), 0.45);
@@ -580,7 +609,10 @@ async function startLofi() {
 
 async function restartLofi() {
   window.clearInterval(lofiScheduler);
+  window.clearTimeout(lofiMixTimer);
   lofiScheduler = null;
+  lofiMixTimer = null;
+  lofiRunId += 1;
   const previousContext = audioContext;
   audioContext = null;
   lofiMaster = null;
@@ -588,12 +620,41 @@ async function restartLofi() {
   await startLofi();
 }
 
+async function advanceMix(expectedRunId = lofiRunId) {
+  if (
+    expectedRunId !== lofiRunId ||
+    activeLofiMode !== "mix" ||
+    !isLofiPlaying ||
+    lofiTransitioning
+  ) {
+    return;
+  }
+
+  lofiTransitioning = true;
+  activeMixIndex = (activeMixIndex + 1) % focusMixOrder.length;
+  updateLofiUI();
+
+  try {
+    await restartLofi();
+  } catch {
+    handleLofiError();
+  } finally {
+    lofiTransitioning = false;
+  }
+}
+
 function stopLofi() {
   if (!audioContext) return;
 
   isLofiPlaying = false;
+  isLofiLoading = false;
+  lofiLoadError = false;
+  currentSampleSources = [];
+  lofiRunId += 1;
   window.clearInterval(lofiScheduler);
+  window.clearTimeout(lofiMixTimer);
   lofiScheduler = null;
+  lofiMixTimer = null;
   setLofiVolume(0, 0.18);
   updateLofiUI();
 
@@ -601,6 +662,24 @@ function stopLofi() {
   audioContext = null;
   lofiMaster = null;
   window.setTimeout(() => contextToClose.close(), 220);
+}
+
+function handleLofiError() {
+  isLofiPlaying = false;
+  isLofiLoading = false;
+  lofiLoadError = true;
+  currentSampleSources = [];
+  lofiRunId += 1;
+  window.clearInterval(lofiScheduler);
+  window.clearTimeout(lofiMixTimer);
+  lofiScheduler = null;
+  lofiMixTimer = null;
+
+  const failedContext = audioContext;
+  audioContext = null;
+  lofiMaster = null;
+  failedContext?.close();
+  updateLofiUI();
 }
 
 function applyLanguage(language, { updateUrl = false } = {}) {
@@ -658,8 +737,7 @@ lofiToggle?.addEventListener("click", async () => {
       await startLofi();
     }
   } catch {
-    isLofiPlaying = false;
-    updateLofiUI();
+    handleLofiError();
   } finally {
     lofiTransitioning = false;
   }
@@ -671,6 +749,8 @@ lofiModeButtons.forEach((button) => {
     if (!focusScenes[nextMode] || nextMode === activeLofiMode || lofiTransitioning) return;
 
     activeLofiMode = nextMode;
+    if (nextMode === "mix") activeMixIndex = 0;
+    lofiLoadError = false;
     updateLofiUI();
     if (!isLofiPlaying) return;
 
@@ -678,8 +758,7 @@ lofiModeButtons.forEach((button) => {
     try {
       await restartLofi();
     } catch {
-      isLofiPlaying = false;
-      updateLofiUI();
+      handleLofiError();
     } finally {
       lofiTransitioning = false;
     }
@@ -692,6 +771,7 @@ lofiVolume?.addEventListener("input", () => {
 
 window.addEventListener("pagehide", () => {
   window.clearInterval(lofiScheduler);
+  window.clearTimeout(lofiMixTimer);
   audioContext?.close();
 });
 

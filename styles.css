@@ -810,7 +810,7 @@ input[type="range"]:focus-visible {
   display: grid;
   gap: 2px;
   grid-column: 1 / -1;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   padding: 2px;
 }
 
@@ -831,6 +831,11 @@ input[type="range"]:focus-visible {
 .lofi-modes button:hover,
 .lofi-modes button:focus-visible {
   color: var(--color-paper);
+}
+
+.lofi-modes button:disabled {
+  cursor: wait;
+  opacity: 0.62;
 }
 
 .lofi-modes button.is-active {
@@ -1256,6 +1261,12 @@ input[type="range"]:focus-visible {
     min-width: 31px;
     padding-left: 7px;
     padding-right: 7px;
+  }
+
+  .lofi-modes button {
+    font-size: 9px;
+    padding-left: 2px;
+    padding-right: 2px;
   }
 }
 
