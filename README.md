@@ -1,71 +1,81 @@
 # Vasya AI Landing
 
-Static bilingual landing page for [Vasya AI](https://github.com/xelvhk/vasya_ai), a local-first voice assistant for desktop productivity.
+[Русская версия](README.ru.md)
 
-## Overview
+Static bilingual product landing page for [Vasya AI](https://github.com/xelvhk/vasya_ai), a local-first desktop assistant for voice tasks, notes, calendar flows, and daily automation.
 
-The site presents Vasya AI as a product: a voice-first assistant with local memory, desktop presence, integrations, safety-minded defaults, and a clear local setup path.
+## Problem
 
-Live site: https://xelvhk.github.io/vasya_ai_landing/
+- A technical assistant repository needs a clear product entry point for non-code review.
+- Long README sections are not enough to explain user value, privacy boundaries, and setup flow quickly.
+- A landing page should be deployable without a backend or build pipeline.
 
-## Features
+## Stack
 
-- RU / EN language switcher with `?lang=ru` and `?lang=en` shareable URLs
-- Cinematic editorial hero section with optimized AVIF image and PNG fallback
-- Product proof block for current working surfaces
-- GitHub and local setup calls to action
-- Responsive layout for mobile and desktop
-- Open Graph and Twitter preview metadata
-- Static GitHub Pages-compatible implementation
+- HTML, CSS, JavaScript
+- Static GitHub Pages deployment
+- Optimized AVIF/WebP/PNG assets
+- RU/EN copy with URL-based language switching
 
-## Project Structure
-
-```text
-.
-├── assets/
-│   ├── favicon.svg
-│   ├── vasya-hero-generated.avif
-│   └── vasya-hero-generated.png
-├── index.html
-├── script.js
-└── styles.css
-```
-
-## Local Preview
-
-Open `index.html` directly in a browser, or serve the folder locally:
+## Setup
 
 ```bash
+git clone https://github.com/xelvhk/vasya_ai_landing.git
+cd vasya_ai_landing
 python3 -m http.server 4173
 ```
 
-Then visit:
+Open:
 
 ```text
 http://127.0.0.1:4173
-```
-
-Language-specific previews:
-
-```text
 http://127.0.0.1:4173/?lang=ru
 http://127.0.0.1:4173/?lang=en
 ```
 
-## Deployment
+No `.env` file is required.
 
-The repository is designed for GitHub Pages. Any commit pushed to `main` can be deployed as a static site without a build step.
+## Architecture
+
+```text
+index.html        page structure, metadata, and content containers
+styles.css        responsive layout, product visual system, animations
+script.js         language switching, interactive UI behavior
+assets/           hero images, social preview, favicon, ambient audio
+.github/workflows GitHub Pages deployment workflow
+```
+
+The project is intentionally backend-free: every feature must work as a static page on GitHub Pages.
+
+## Demo
+
+- Production: [https://xelvhk.github.io/vasya_ai_landing/](https://xelvhk.github.io/vasya_ai_landing/)
+- Screenshot placeholder: add `docs/screenshots/home.png` after the next visual refresh.
 
 ## Quality Checks
 
-Before publishing, verify:
+```bash
+node --check script.js
+python3 -m http.server 4173
+```
 
-- `node --check script.js`
-- mobile width has no horizontal overflow
-- RU / EN language switch updates visible copy, metadata, and `html lang`
-- hero image assets return `200 OK`
-- no local filesystem paths or private source references are present
+Manual checks:
+
+- mobile width has no horizontal overflow;
+- RU/EN switch updates visible copy and metadata;
+- hero images load successfully;
+- no private local paths are present in public files.
+
+## Roadmap
+
+- [ ] Add fresh product screenshots from `vasya_ai`.
+- [ ] Add a short demo video section.
+- [ ] Add a lightweight visual regression check for the landing page.
 
 ## Status
 
-Active development.
+Active development
+
+## License
+
+License is not specified yet.
